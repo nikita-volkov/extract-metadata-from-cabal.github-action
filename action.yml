@@ -1,9 +1,15 @@
 name: Extract metadata about a Cabal project
 
 outputs:
-  cabal-file: ${{steps.find-cabal.outputs.file}}
-  name: ${{steps.resolve-name.outputs.name}}
-  version: ${{steps.resolve-version.outputs.version}}
+  cabal-path: 
+    description: Path to the cabal file
+    value: ${{steps.find-cabal.outputs.file}}
+  name:
+    description: Package name
+    value: ${{steps.resolve-name.outputs.name}}
+  version:
+    description: Package version
+    value: ${{steps.resolve-version.outputs.version}}
 
 runs:
   using: composite
