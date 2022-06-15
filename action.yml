@@ -1,0 +1,23 @@
+name: Extract metadata about a Cabal project
+
+outputs:
+  cabal-file: ${{steps.find-cabal.outputs.file}}
+  version: ${{steps.resolve-version.outputs.version}}
+
+runs:
+  using: composite
+  steps:
+    - id: find-cabal
+      run: |
+        files=(*.cabal)
+        if [ "${#files[@]}" -ne 1 ]
+        then
+          echo "More than 1 cabal file"
+          exit 1
+        fi
+        file=${files[0]}
+        echo "::set-output name=file::$file"
+    - id: resolve-version
+      run: |
+        cabal_version="$(grep -oP '^version:\s*\K.*' ${{steps.find-cabal.outputs.file}})"
+        echo "::set-output name=version::$cabal_version"
