@@ -2,6 +2,7 @@ name: Extract metadata about a Cabal project
 
 outputs:
   cabal-file: ${{steps.find-cabal.outputs.file}}
+  name: ${{steps.resolve-name.outputs.name}}
   version: ${{steps.resolve-version.outputs.version}}
 
 runs:
@@ -19,5 +20,9 @@ runs:
         echo "::set-output name=file::$file"
     - id: resolve-version
       run: |
-        cabal_version="$(grep -oP '^version:\s*\K.*' ${{steps.find-cabal.outputs.file}})"
-        echo "::set-output name=version::$cabal_version"
+        version="$(grep -oP '^version:\s*\K.*' ${{steps.find-cabal.outputs.file}})"
+        echo "::set-output name=version::$version"
+    - id: resolve-name
+      run: |
+        name="$(basename ${{steps.find-cabal.outputs.file}} .cabal)"
+        echo "::set-output name=name::$name"
