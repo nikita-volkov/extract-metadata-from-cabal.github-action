@@ -15,6 +15,7 @@ runs:
   using: composite
   steps:
     - id: find-cabal
+      shell: bash
       run: |
         files=(*.cabal)
         if [ "${#files[@]}" -ne 1 ]
@@ -25,10 +26,12 @@ runs:
         file=${files[0]}
         echo "::set-output name=file::$file"
     - id: resolve-version
+      shell: bash
       run: |
         version="$(grep -oP '^version:\s*\K.*' ${{steps.find-cabal.outputs.file}})"
         echo "::set-output name=version::$version"
     - id: resolve-name
+      shell: bash
       run: |
         name="$(basename ${{steps.find-cabal.outputs.file}} .cabal)"
         echo "::set-output name=name::$name"
