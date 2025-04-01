@@ -1,5 +1,7 @@
 name: Extract metadata about a Cabal project
-
+description: |
+  This action extracts metadata from a Cabal project. It finds the cabal file, and extracts the package name and version.
+  It assumes that there is only one cabal file in the repository.
 outputs:
   cabal-path: 
     description: Path to the cabal file
@@ -24,14 +26,14 @@ runs:
           exit 1
         fi
         file=${files[0]}
-        echo "::set-output name=file::$file"
+        echo "file=$file" >> $GITHUB_OUTPUT
     - id: resolve-version
       shell: bash
       run: |
         version="$(grep -oP '^version:\s*\K.*' ${{steps.find-cabal.outputs.file}})"
-        echo "::set-output name=version::$version"
+        echo "version=$version" >> $GITHUB_OUTPUT
     - id: resolve-name
       shell: bash
       run: |
         name="$(basename ${{steps.find-cabal.outputs.file}} .cabal)"
-        echo "::set-output name=name::$name"
+        echo "name=$name" >> $GITHUB_OUTPUT
